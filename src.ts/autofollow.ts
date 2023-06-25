@@ -15,12 +15,12 @@ export class AutoFollow extends BasePuppeteer {
   async login({ username, password, totpSecret }) {
     await this._page.goto('https://instagram.com');
     await this.waitForSelector({ selector: 'input[name="username"]' });
-    await this.type({ selector: 'input[name="username"]', value: username });   
-    await this.type({ selector: 'input[name="password"]', value: password });
+    await this.type({ stealth: false, selector: 'input[name="username"]', value: username });   
+    await this.type({ stealth: false, selector: 'input[name="password"]', value: password });
     await this.click({ selector: 'button[type="submit"]' });
     await this.timeout({ n: 5000 });
     if (await this.evaluate({ script: String(function () { return Boolean(document.querySelector('input[name="verificationCode"]')); }), args: [] })) {
-      await this.type({ selector: 'input[name="verificationCode"]', value: totpGenerator(totpSecret.replace(/\s+/g, '')) });
+      await this.type({stealth: false, selector: 'input[name="verificationCode"]', value: totpGenerator(totpSecret.replace(/\s+/g, '')) });
       await this.click({ selector: 'button[type="button"]' });
       await this.timeout({ n: 5000 });
     }
